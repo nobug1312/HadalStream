@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "dev": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "HADAL_DEV_URL": "http://localhost:5173"
+      }
+    }
+  }
+}

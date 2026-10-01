@@ -1,0 +1,189 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "@fontsource/zen-maru-gothic/latin-400.css";
+@import "@fontsource/zen-maru-gothic/latin-500.css";
+@import "@fontsource/zen-maru-gothic/latin-700.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+    --font-heading: var(--font-sans);
+    --font-sans: 'Zen Maru Gothic', 'Yu Gothic UI', 'Segoe UI', sans-serif;
+    --font-mincho: 'Yu Mincho', 'YuMincho', 'Hiragino Mincho ProN', 'MS Mincho', 'SimSun', serif;
+    --color-sidebar-ring: var(--sidebar-ring);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar: var(--sidebar);
+    --color-success: var(--success);
+    --color-seal: var(--seal);
+    --color-warning: var(--warning);
+    --color-ring: var(--ring);
+    --color-input: var(--input);
+    --color-border: var(--border);
+    --color-destructive: var(--destructive);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-accent: var(--accent);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-muted: var(--muted);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-secondary: var(--secondary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-primary: var(--primary);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-popover: var(--popover);
+    --color-card-foreground: var(--card-foreground);
+    --color-card: var(--card);
+    --color-foreground: var(--foreground);
+    --color-background: var(--background);
+    --radius-sm: calc(var(--radius) * 0.6);
+    --radius-md: calc(var(--radius) * 0.8);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.4);
+    --radius-2xl: calc(var(--radius) * 1.8);
+}
+
+/* Stronger curves than the CSS defaults: instant feedback on enter, natural on-screen movement. */
+@theme {
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --animate-bob: bob 5s ease-in-out infinite;
+    --animate-drift: drift 24s ease-in-out infinite alternate;
+
+    @keyframes bob {
+        0%, 100% { transform: translateY(0) rotate(-2deg); }
+        50% { transform: translateY(-3px) rotate(2deg); }
+    }
+    @keyframes drift {
+        from { transform: translateX(0); }
+        to { transform: translateX(14px); }
+    }
+}
+
+/* Washi paper by day, lantern-lit indigo by night.
+   --sidebar is also the native title bar color (MainWindow.ApplyTheme); keep them in sync. */
+:root {
+    --sidebar: #f1eadb;
+    --background: #fbf7ee;
+    --foreground: #3b342b;
+    --card: #fffdf8;
+    --card-foreground: #3b342b;
+    --popover: #fffdf8;
+    --popover-foreground: #3b342b;
+    --primary: #4f7f52;
+    --primary-foreground: #fffdf8;
+    --secondary: #efe7d6;
+    --secondary-foreground: #3b342b;
+    --muted: #f1eadb;
+    --muted-foreground: #8a7e6b;
+    --accent: #ece3cf;
+    --accent-foreground: #3b342b;
+    --destructive: #c4553c;
+    --success: #5f8f3e;
+    --warning: #c8892a;
+    --seal: #c8463a;
+    --border: rgb(92 72 40 / 0.12);
+    --input: rgb(92 72 40 / 0.18);
+    --ring: #4f7f52;
+    --radius: 0.875rem;
+    --sidebar-foreground: #6b604f;
+    --sidebar-primary: #4f7f52;
+    --sidebar-primary-foreground: #fffdf8;
+    --sidebar-accent: rgb(92 72 40 / 0.07);
+    --sidebar-accent-foreground: #3b342b;
+    --sidebar-border: rgb(92 72 40 / 0.1);
+    --sidebar-ring: #4f7f52;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .55 -.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.dark {
+    --sidebar: #161b29;
+    --background: #1c2233;
+    --foreground: #efe8d8;
+    --card: #232a3e;
+    --card-foreground: #efe8d8;
+    --popover: #262e44;
+    --popover-foreground: #efe8d8;
+    --primary: #e7b35a;
+    --primary-foreground: #1c2233;
+    --secondary: #2a3249;
+    --secondary-foreground: #efe8d8;
+    --muted: #262d42;
+    --muted-foreground: #9aa3b8;
+    --accent: #2a3249;
+    --accent-foreground: #efe8d8;
+    --destructive: #e8836b;
+    --success: #a6d27f;
+    --warning: #f0a85a;
+    --seal: #d65a46;
+    --border: rgb(239 232 216 / 0.08);
+    --input: rgb(239 232 216 / 0.13);
+    --ring: #e7b35a;
+    --sidebar-foreground: #aab2c5;
+    --sidebar-primary: #e7b35a;
+    --sidebar-primary-foreground: #1c2233;
+    --sidebar-accent: rgb(239 232 216 / 0.06);
+    --sidebar-accent-foreground: #efe8d8;
+    --sidebar-border: rgb(239 232 216 / 0.06);
+    --sidebar-ring: #e7b35a;
+    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .94 0 0 0 0 .91 0 0 0 0 .85 0 0 0 .4 -.16'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    html {
+        @apply font-sans;
+    }
+    /* Desktop feel: UI chrome isn't selectable text, and buttons keep the arrow cursor. */
+    body {
+        @apply bg-sidebar text-foreground antialiased;
+        user-select: none;
+        cursor: default;
+    }
+    input, textarea, .selectable {
+        user-select: text;
+    }
+    /* Washi grain over everything; too faint to affect legibility. */
+    body::after {
+        content: '';
+        position: fixed;
+        inset: 0;
+        z-index: 60;
+        pointer-events: none;
+        background-image: var(--grain);
+        opacity: 0.55;
+    }
+    ::selection {
+        background: color-mix(in oklab, var(--primary) 35%, transparent);
+    }
+    ::-webkit-scrollbar {
+        width: 12px;
+        height: 12px;
+    }
+    ::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+        border: 3px solid transparent;
+        border-radius: 999px;
+        background: color-mix(in oklab, var(--foreground) 14%, transparent) content-box;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: color-mix(in oklab, var(--foreground) 26%, transparent);
+    }
+}
+
+/* Reduced motion = fewer, gentler animations: movement is gated with motion-safe:, fades and color changes stay. */
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-delay: 0ms !important;
+    }
+}

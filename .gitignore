@@ -1,0 +1,8 @@
+bin/
+obj/
+.vs/
+*.user
+node_modules/
+src/HadalStream.Desktop/wwwroot/
+publish/
+releases/

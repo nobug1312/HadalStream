@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/HadalStream.Domain/HadalStream.Domain.csproj" />
+    <Project Path="src/HadalStream.Application/HadalStream.Application.csproj" />
+    <Project Path="src/HadalStream.Infrastructure/HadalStream.Infrastructure.csproj" />
+    <Project Path="src/HadalStream.Desktop/HadalStream.Desktop.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/HadalStream.Tests/HadalStream.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>HadalStream</AssemblyName>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>HadalStream</Product>
+    <WebDir>$(MSBuildProjectDirectory)/../web</WebDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HadalStream.Infrastructure\HadalStream.Infrastructure.csproj" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+    <PackageReference Include="Velopack" Version="1.2.161" />
+    <Using Include="System.IO" />
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+  <!-- Release builds compile the React UI into wwwroot; it ships as plain files next to the exe. -->
+  <Target Name="BuildWeb" BeforeTargets="BeforeBuild">
+    <Exec Condition="'$(Configuration)' == 'Release' And !Exists('$(WebDir)/node_modules')" Command="npm ci" WorkingDirectory="$(WebDir)" />
+    <Exec Condition="'$(Configuration)' == 'Release'" Command="npm run build" WorkingDirectory="$(WebDir)" />
+    <ItemGroup>
+      <Content Include="wwwroot/**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+</Project>
