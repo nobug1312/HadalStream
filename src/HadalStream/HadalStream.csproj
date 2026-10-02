@@ -1,0 +1,65 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+    <Product>HadalStream</Product>
+    <WebDir>$(MSBuildProjectDirectory)/../web</WebDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4258.31" />
+    <PackageReference Include="Velopack" Version="1.2.161" />
+    <InternalsVisibleTo Include="HadalStream.Tests" />
+    <Using Include="System.IO" />
+    <Using Include="System.Net.Http" />
+    <Resource Include="app.ico" />
+  </ItemGroup>
+
+  <!-- Release builds compile the React UI into wwwroot; it ships as plain files next to the exe. -->
+  <Target Name="BuildWeb" BeforeTargets="BeforeBuild">
+    <Exec Condition="'$(Configuration)' == 'Release' And !Exists('$(WebDir)/node_modules')" Command="npm ci" WorkingDirectory="$(WebDir)" />
+    <Exec Condition="'$(Configuration)' == 'Release'" Command="npm run build" WorkingDirectory="$(WebDir)" />
+    <ItemGroup>
+      <Content Include="wwwroot/**" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+  <!-- MP4 converter: bundle a pinned, checksum-verified FFmpeg (gyan.dev essentials build, GPLv3). Downloaded once into obj/. -->
+  <PropertyGroup>
+    <FfmpegVersion>9.0.2</FfmpegVersion>
+    <FfmpegZip>ffmpeg-$(FfmpegVersion)-essentials_build.zip</FfmpegZip>
+    <FfmpegSha256>60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba</FfmpegSha256>
+    <FfmpegDir>$(MSBuildProjectDirectory)/obj/ffmpeg-$(FfmpegVersion)</FfmpegDir>
+  </PropertyGroup>
+
+  <Target Name="BundleFfmpeg" BeforeTargets="BeforeBuild">
+    <PropertyGroup>
+      <NeedFfmpeg Condition="!Exists('$(FfmpegDir)/bin/ffmpeg.exe')">true</NeedFfmpeg>
+    </PropertyGroup>
+    <DownloadFile Condition="'$(NeedFfmpeg)' == 'true'" SourceUrl="https://github.com/GyanD/codexffmpeg/releases/download/$(FfmpegVersion)/$(FfmpegZip)" DestinationFolder="$(FfmpegDir)" />
+    <GetFileHash Condition="'$(NeedFfmpeg)' == 'true'" Files="$(FfmpegDir)/$(FfmpegZip)" Algorithm="SHA256">
+      <Output TaskParameter="Hash" PropertyName="FfmpegZipHash" />
+    </GetFileHash>
+    <Delete Condition="'$(NeedFfmpeg)' == 'true' And '$(FfmpegZipHash)' != '$(FfmpegSha256)'" Files="$(FfmpegDir)/$(FfmpegZip)" />
+    <Error Condition="'$(NeedFfmpeg)' == 'true' And '$(FfmpegZipHash)' != '$(FfmpegSha256)'" Text="FFmpeg download failed its SHA-256 check ($(FfmpegZipHash))." />
+    <Unzip Condition="'$(NeedFfmpeg)' == 'true'" SourceFiles="$(FfmpegDir)/$(FfmpegZip)" DestinationFolder="$(FfmpegDir)/unzipped" />
+    <ItemGroup Condition="'$(NeedFfmpeg)' == 'true'">
+      <UnzippedFfmpeg Include="$(FfmpegDir)/unzipped/*/bin/ffmpeg.exe;$(FfmpegDir)/unzipped/*/LICENSE" />
+    </ItemGroup>
+    <Copy Condition="'$(NeedFfmpeg)' == 'true'" SourceFiles="@(UnzippedFfmpeg)" DestinationFolder="$(FfmpegDir)/bin" />
+    <RemoveDir Condition="'$(NeedFfmpeg)' == 'true'" Directories="$(FfmpegDir)/unzipped" />
+    <Delete Condition="'$(NeedFfmpeg)' == 'true'" Files="$(FfmpegDir)/$(FfmpegZip)" />
+    <ItemGroup>
+      <FfmpegBinary Include="$(FfmpegDir)/bin/*" />
+      <Content Include="@(FfmpegBinary)" Link="ffmpeg/%(FfmpegBinary.Filename)%(FfmpegBinary.Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
+</Project>
