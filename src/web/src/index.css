@@ -21,6 +21,24 @@
     --color-sidebar: var(--sidebar);
     --color-success: var(--success);
     --color-seal: var(--seal);
+    --color-sky: var(--sky);
+    --color-sky-deep: var(--sky-deep);
+    --color-cloud: var(--cloud);
+    --color-cloud-shade: var(--cloud-shade);
+    --color-hill-far: var(--hill-far);
+    --color-hill-near: var(--hill-near);
+    --color-grass: var(--grass);
+    --color-leaf: var(--leaf);
+    --color-leaf-light: var(--leaf-light);
+    --color-trunk: var(--trunk);
+    --color-acorn: var(--acorn);
+    --color-acorn-cap: var(--acorn-cap);
+    --color-cat: var(--cat);
+    --color-cat-light: var(--cat-light);
+    --color-cat-dark: var(--cat-dark);
+    --color-owl: var(--owl);
+    --color-owl-light: var(--owl-light);
+    --color-firefly: var(--firefly);
     --color-warning: var(--warning);
     --color-ring: var(--ring);
     --color-input: var(--input);
@@ -51,53 +69,118 @@
 @theme {
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-    --animate-bob: bob 5s ease-in-out infinite;
     --animate-drift: drift 24s ease-in-out infinite alternate;
+    --animate-sway: sway 6s ease-in-out infinite;
+    --animate-hop: hop 0.7s var(--ease-out) infinite alternate;
+    --animate-tail: tail 3.2s ease-in-out infinite;
+    --animate-blink: blink 5s ease-in-out infinite;
+    --animate-flicker: flicker 1.6s ease-in-out infinite;
+    --animate-heart: heart 0.9s var(--ease-out) forwards;
+    --animate-jump: jump 0.45s var(--ease-out);
+    --animate-rainbow: rainbow 4s linear infinite;
+    --animate-rainbow-icon: rainbow-icon 4s linear infinite;
 
-    @keyframes bob {
-        0%, 100% { transform: translateY(0) rotate(-2deg); }
-        50% { transform: translateY(-3px) rotate(2deg); }
-    }
     @keyframes drift {
         from { transform: translateX(0); }
-        to { transform: translateX(14px); }
+        to { transform: translateX(18px); }
+    }
+    @keyframes sway {
+        0%, 100% { transform: rotate(-2.5deg); }
+        50% { transform: rotate(2.5deg); }
+    }
+    @keyframes hop {
+        from { transform: translateY(0); }
+        to { transform: translateY(-4px); }
+    }
+    @keyframes tail {
+        0%, 100% { transform: rotate(-10deg); }
+        50% { transform: rotate(8deg); }
+    }
+    @keyframes blink {
+        0%, 93%, 100% { transform: scaleY(1); }
+        96% { transform: scaleY(0.1); }
+    }
+    @keyframes flicker {
+        0%, 100% { transform: scale(1, 1) rotate(-2deg); }
+        50% { transform: scale(0.95, 1.06) rotate(2deg); }
+    }
+    @keyframes heart {
+        from { opacity: 0; transform: translateY(2px) scale(0.6); }
+        25% { opacity: 1; }
+        to { opacity: 0; transform: translateY(-18px) scale(1); }
+    }
+    @keyframes jump {
+        0%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-5px); }
+    }
+    @keyframes rainbow {
+        to { filter: hue-rotate(360deg); }
+    }
+    @keyframes rainbow-icon {
+        to { filter: hue-rotate(360deg) saturate(1.5); }
     }
 }
 
-/* Washi paper by day, lantern-lit indigo by night.
+/* Palette-coloured rainbow for the brand name. */
+@utility rainbow-text {
+    background-image: linear-gradient(90deg, var(--seal), var(--warning), var(--success), var(--sky-deep), var(--wisteria), var(--seal));
+    background-size: 200% auto;
+    background-clip: text;
+    color: transparent;
+}
+
+/* Meadow and sky by day, moonlit field by night.
    --sidebar is also the native title bar color (MainWindow.ApplyTheme); keep them in sync. */
 :root {
-    --sidebar: #f1eadb;
-    --background: #fbf7ee;
-    --foreground: #3b342b;
-    --card: #fffdf8;
-    --card-foreground: #3b342b;
-    --popover: #fffdf8;
-    --popover-foreground: #3b342b;
+    --sidebar: #eef4ec;
+    --background: #f8fbf6;
+    --foreground: #2f3b33;
+    --card: #ffffff;
+    --card-foreground: #2f3b33;
+    --popover: #ffffff;
+    --popover-foreground: #2f3b33;
     --primary: #4f7f52;
-    --primary-foreground: #fffdf8;
-    --secondary: #efe7d6;
-    --secondary-foreground: #3b342b;
-    --muted: #f1eadb;
-    --muted-foreground: #8a7e6b;
-    --accent: #ece3cf;
-    --accent-foreground: #3b342b;
+    --primary-foreground: #ffffff;
+    --secondary: #e8f0e5;
+    --secondary-foreground: #2f3b33;
+    --muted: #edf3ea;
+    --muted-foreground: #6f7d6b;
+    --accent: #e3ece0;
+    --accent-foreground: #2f3b33;
     --destructive: #c4553c;
     --success: #5f8f3e;
     --warning: #c8892a;
     --seal: #c8463a;
-    --border: rgb(92 72 40 / 0.12);
-    --input: rgb(92 72 40 / 0.18);
+    --wisteria: #a77fc4;
+    --border: rgb(47 70 50 / 0.12);
+    --input: rgb(47 70 50 / 0.18);
     --ring: #4f7f52;
     --radius: 0.875rem;
-    --sidebar-foreground: #6b604f;
+    --sidebar-foreground: #55635a;
     --sidebar-primary: #4f7f52;
-    --sidebar-primary-foreground: #fffdf8;
-    --sidebar-accent: rgb(92 72 40 / 0.07);
-    --sidebar-accent-foreground: #3b342b;
-    --sidebar-border: rgb(92 72 40 / 0.1);
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: rgb(47 70 50 / 0.07);
+    --sidebar-accent-foreground: #2f3b33;
+    --sidebar-border: rgb(47 70 50 / 0.1);
     --sidebar-ring: #4f7f52;
-    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .36 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .55 -.18'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --sky: #d4e9f4;
+    --sky-deep: #5f9dc2;
+    --cloud: #ffffff;
+    --cloud-shade: #e2edf0;
+    --hill-far: #c5dba0;
+    --hill-near: #96bd6c;
+    --grass: #5f8f3e;
+    --leaf: #5c9140;
+    --leaf-light: #82b558;
+    --trunk: #7a5a3a;
+    --acorn: #c8955f;
+    --acorn-cap: #7a5a3a;
+    --cat: #e8a463;
+    --cat-light: #fbe5c8;
+    --cat-dark: #c47838;
+    --owl: #9c7a58;
+    --owl-light: #ecdcc2;
+    --firefly: #d9f27e;
 }
 
 .dark {
@@ -130,7 +213,25 @@
     --sidebar-accent-foreground: #efe8d8;
     --sidebar-border: rgb(239 232 216 / 0.06);
     --sidebar-ring: #e7b35a;
-    --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .94 0 0 0 0 .91 0 0 0 0 .85 0 0 0 .4 -.16'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    --sky: #253457;
+    --sky-deep: #7fb0d6;
+    --cloud: #34426a;
+    --cloud-shade: #2b385c;
+    --hill-far: #27403e;
+    --hill-near: #1f3431;
+    --grass: #3d6148;
+    --leaf: #2e4a3a;
+    --leaf-light: #3b5c47;
+    --trunk: #3e3129;
+    --acorn: #b08353;
+    --acorn-cap: #5d4430;
+    --cat: #c98d57;
+    --cat-light: #e3cdac;
+    --cat-dark: #a2683a;
+    --owl: #7c654f;
+    --owl-light: #c4b095;
+    --wisteria: #c6a6e0;
+    --firefly: #d9f27e;
 }
 
 @layer base {
@@ -148,16 +249,6 @@
     }
     input, textarea, .selectable {
         user-select: text;
-    }
-    /* Washi grain over everything; too faint to affect legibility. */
-    body::after {
-        content: '';
-        position: fixed;
-        inset: 0;
-        z-index: 60;
-        pointer-events: none;
-        background-image: var(--grain);
-        opacity: 0.55;
     }
     ::selection {
         background: color-mix(in oklab, var(--primary) 35%, transparent);

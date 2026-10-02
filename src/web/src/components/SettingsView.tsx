@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react'
-import { FolderOpenIcon, Loader2Icon, MinusIcon, MoonIcon, PlusIcon, SunIcon } from 'lucide-react'
+import { FolderOpenIcon, MinusIcon, MoonIcon, PlusIcon, SunIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { PageTitle } from '@/components/common'
+import { Pinwheel, Sky } from '@/components/scenery'
 import { call, toastError, type Quality, type Settings, type Theme } from '@/api'
 
 type Form = Omit<Settings, 'headers' | 'proxy' | 'theme'> & { proxy: string; headers: string }
@@ -77,7 +78,8 @@ export function SettingsView({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="min-h-0 flex-1 overflow-y-auto">
+      <div className="relative isolate min-h-0 flex-1 overflow-y-auto">
+        <Sky className="h-40" />
         <div className="mx-auto max-w-3xl px-8 pt-7 pb-10">
           <PageTitle title="Settings" kanji="設定" />
           <p className="-mt-2 text-sm text-muted-foreground">Applies to new downloads.</p>
@@ -115,7 +117,7 @@ export function SettingsView({
           </Section>
 
           <Section title="Network">
-            <Row label="Proxy" htmlFor="proxy" hint="Empty uses the system proxy." stacked>
+            <Row label="Proxy" htmlFor="proxy" hint="Use one if a site is blocked on your network. Empty uses the system proxy." stacked>
               <Input
                 id="proxy"
                 value={draft.proxy}
@@ -124,7 +126,7 @@ export function SettingsView({
                 spellCheck={false}
               />
             </Row>
-            <Row label="Custom headers" htmlFor="headers" hint="One per line. Sent to pages only, never to video servers." stacked>
+            <Row label="Custom headers" htmlFor="headers" hint="Only if a site needs a cookie or referer to load. One per line." stacked>
               <Textarea
                 id="headers"
                 rows={3}
@@ -172,7 +174,7 @@ export function SettingsView({
           Discard
         </Button>
         <Button disabled={!dirty || saving} onClick={save}>
-          {saving && <Loader2Icon className="animate-spin" />}
+          {saving && <Pinwheel className="size-4" />}
           Save
         </Button>
       </footer>

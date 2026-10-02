@@ -1,5 +1,8 @@
 {
   "profiles": {
+    "app": {
+      "commandName": "Project"
+    },
     "dev": {
       "commandName": "Project",
       "environmentVariables": {

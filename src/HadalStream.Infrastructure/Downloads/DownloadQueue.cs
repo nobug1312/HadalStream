@@ -191,6 +191,8 @@ internal sealed class DownloadQueue : IDownloadQueue
             lock (gate)
             {
                 entry.Active = false;
+                entry.Cts?.Dispose();
+                entry.Cts = null;
                 entry.Speed = 0;
                 discard = job.Status == DownloadStatus.Canceled;
                 listed = entries.Contains(entry);

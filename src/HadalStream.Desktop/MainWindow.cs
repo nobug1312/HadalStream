@@ -128,7 +128,7 @@ internal sealed partial class MainWindow : Window
     private void ApplyTheme()
     {
         var night = settings.Current.Theme == "dark";
-        var (chrome, text) = night ? (0x161B29, 0xEFE8D8) : (0xF1EADB, 0x3B342B);
+        var (chrome, text) = night ? (0x161B29, 0xEFE8D8) : (0xEEF4EC, 0x2F3B33);
         Background = new SolidColorBrush(Color.FromRgb((byte)(chrome >> 16), (byte)(chrome >> 8), (byte)chrome));
         web.DefaultBackgroundColor = System.Drawing.Color.FromArgb(unchecked((int)0xFF000000) | chrome);
 

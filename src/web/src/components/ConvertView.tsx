@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ComponentType } from 'react'
 import {
   AlertTriangleIcon,
   BanIcon,
@@ -6,17 +6,16 @@ import {
   Clock3Icon,
   FilmIcon,
   FolderOpenIcon,
-  Loader2Icon,
   PlayIcon,
   RotateCwIcon,
   Trash2Icon,
-  UploadIcon,
   XIcon,
 } from 'lucide-react'
 import { cn } from 'cn'
 import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import { IconAction, PageTitle } from '@/components/common'
+import { FlameSprite, Pinwheel, Sky } from '@/components/scenery'
 import { call, formatDuration, toastError, type Conversion } from '@/api'
 
 export function ConvertView({ items }: { items: Conversion[] }) {
@@ -29,7 +28,7 @@ export function ConvertView({ items }: { items: Conversion[] }) {
 
   return (
     <div
-      className="min-h-0 flex-1 overflow-y-auto"
+      className="relative isolate min-h-0 flex-1 overflow-y-auto"
       onDragOver={(e) => {
         if (!e.dataTransfer.types.includes('Files')) return
         e.preventDefault()
@@ -44,6 +43,7 @@ export function ConvertView({ items }: { items: Conversion[] }) {
         drop(e.dataTransfer.files)
       }}
     >
+      <Sky className="h-48" />
       <div className="mx-auto max-w-5xl px-8 pb-10">
         <div className="pt-7 pb-6">
           <PageTitle
@@ -57,9 +57,9 @@ export function ConvertView({ items }: { items: Conversion[] }) {
               dragging && 'border-primary bg-primary/5',
             )}
           >
-            <div className={cn('grid size-11 place-items-center rounded-xl bg-muted transition-colors duration-150', dragging && 'bg-primary/15 text-primary')}>
-              <UploadIcon className="size-5" />
-            </div>
+            <FlameSprite
+              className={cn('h-16 w-12 transition-transform duration-200 ease-out', dragging && 'motion-safe:scale-115')}
+            />
             <p className="mt-4 text-sm font-bold">{dragging ? 'Release to convert' : 'Drop FLV, MOV or MKV here'}</p>
             <p className="mt-1 max-w-md text-sm text-muted-foreground">Lossless when possible. Saved next to the original.</p>
             <Button variant="outline" className="mt-5" onClick={() => call('convert.pick').catch(toastError)}>
@@ -150,14 +150,14 @@ function ConversionRow({ item }: { item: Conversion }) {
 function StatusIcon({ status }: { status: Conversion['status'] }) {
   const [Icon, tint] = {
     Queued: [Clock3Icon, 'bg-muted text-muted-foreground'],
-    Converting: [Loader2Icon, 'bg-primary/12 text-primary'],
+    Converting: [Pinwheel, 'bg-primary/12 text-primary'],
     Completed: [CheckIcon, 'bg-success/12 text-success'],
     Failed: [AlertTriangleIcon, 'bg-destructive/12 text-destructive'],
     Canceled: [BanIcon, 'bg-muted text-muted-foreground'],
-  }[status] as [typeof CheckIcon, string]
+  }[status] as [ComponentType<{ className?: string }>, string]
   return (
     <div className={cn('grid size-9 shrink-0 place-items-center rounded-xl transition-colors duration-200', tint)}>
-      <Icon className={cn('size-4', status === 'Converting' && 'animate-spin')} />
+      <Icon className="size-4" />
     </div>
   )
 }

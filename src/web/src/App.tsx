@@ -136,13 +136,13 @@ export default function App() {
           <ConvertView items={conversions} />
         ) : (
           <div className="min-h-0 flex-1 overflow-y-auto">
+            <AddPanel
+              title={views[page].title}
+              kanji={views[page].kanji}
+              subtitle={summary(jobs, page)}
+              defaultQuality={settings?.defaultQuality ?? 'high'}
+            />
             <div className="mx-auto max-w-5xl px-8 pb-10">
-              <AddPanel
-                title={views[page].title}
-                kanji={views[page].kanji}
-                subtitle={summary(jobs, page)}
-                defaultQuality={settings?.defaultQuality ?? 'high'}
-              />
               <JobList jobs={jobs} view={page} />
             </div>
           </div>

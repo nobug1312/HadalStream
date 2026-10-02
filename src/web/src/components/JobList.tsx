@@ -1,4 +1,4 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ComponentType, type ReactNode } from 'react'
 import {
   AlertTriangleIcon,
   ArrowDownIcon,
@@ -7,7 +7,6 @@ import {
   Clock3Icon,
   FileTextIcon,
   FolderOpenIcon,
-  Loader2Icon,
   PauseIcon,
   PlayIcon,
   RotateCwIcon,
@@ -16,14 +15,15 @@ import {
 } from 'lucide-react'
 import { cn } from 'cn'
 import { Progress } from '@/components/ui/progress'
-import { IconAction, Kbd, PaperBoat } from '@/components/common'
+import { IconAction, Kbd } from '@/components/common'
+import { Pinwheel } from '@/components/scenery'
 import { call, formatBytes, formatDuration, platformLabel, toastError, views, type Job, type View } from '@/api'
 
 const seen = new Set<string>()
 
 const empty: Record<View, { title: string; hint: ReactNode }> = {
   all: {
-    title: 'Calm waters',
+    title: 'Clear skies',
     hint: (
       <>
         Paste a link above or press <Kbd>Ctrl</Kbd>+<Kbd>V</Kbd>.
@@ -41,9 +41,8 @@ export function JobList({ jobs, view }: { jobs: Job[]; view: View }) {
 
   if (visible.length === 0) {
     return (
-      <div className="flex flex-col items-center rounded-2xl border border-dashed px-6 pt-8 pb-12 text-center">
-        <PaperBoat className="h-28 w-52" />
-        <p className="mt-3 text-sm font-bold">{empty[view].title}</p>
+      <div className="flex flex-col items-center rounded-2xl border border-dashed px-6 py-12 text-center">
+        <p className="text-sm font-bold">{empty[view].title}</p>
         <p className="mt-1 max-w-sm text-sm text-muted-foreground">{empty[view].hint}</p>
       </div>
     )
@@ -85,7 +84,7 @@ function JobRow({ job }: { job: Job }) {
         {showProgress && (
           <Progress
             value={percent}
-            className={cn('mt-2', job.status === 'Paused' && '[&_[data-slot=progress-indicator]]:bg-warning')}
+            className={cn('mt-2', job.status === 'Paused' && '[&_[data-slot=progress-indicator]]:bg-warning [&_[data-slot=progress-indicator]]:bg-none')}
           />
         )}
         <p
@@ -149,16 +148,16 @@ function JobRow({ job }: { job: Job }) {
 function StatusIcon({ job }: { job: Job }) {
   const [Icon, tint] = {
     Queued: [Clock3Icon, 'bg-muted text-muted-foreground'],
-    Downloading: [job.totalBytes === 0 ? Loader2Icon : ArrowDownIcon, 'bg-primary/12 text-primary'],
+    Downloading: [job.totalBytes === 0 ? Pinwheel : ArrowDownIcon, 'bg-primary/12 text-primary'],
     Paused: [PauseIcon, 'bg-warning/12 text-warning'],
     Completed: [CheckIcon, 'bg-success/12 text-success'],
     Failed: [AlertTriangleIcon, 'bg-destructive/12 text-destructive'],
     Canceled: [BanIcon, 'bg-muted text-muted-foreground'],
-  }[job.status] as [typeof CheckIcon, string]
+  }[job.status] as [ComponentType<{ className?: string }>, string]
 
   return (
     <div className={cn('grid size-9 shrink-0 place-items-center rounded-xl transition-colors duration-200', tint)}>
-      <Icon className={cn('size-4', Icon === Loader2Icon && 'animate-spin')} />
+      <Icon className="size-4" />
     </div>
   )
 }

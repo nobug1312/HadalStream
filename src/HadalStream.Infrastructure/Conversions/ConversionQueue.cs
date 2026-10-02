@@ -135,6 +135,8 @@ internal sealed class ConversionQueue(AppPaths paths, IErrorLog log) : IConversi
             lock (gate)
             {
                 entry.Active = false;
+                entry.Cts?.Dispose();
+                entry.Cts = null;
                 entry.Job.Stopped();
                 listed = entries.Contains(entry);
             }

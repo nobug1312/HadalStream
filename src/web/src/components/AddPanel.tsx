@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { CheckIcon, CircleAlertIcon, CopyIcon, DownloadIcon, LinkIcon, Loader2Icon, XIcon } from 'lucide-react'
+import { CheckIcon, CircleAlertIcon, CopyIcon, DownloadIcon, LinkIcon, XIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Kbd, PageTitle } from '@/components/common'
+import { AcornLoader, Pinwheel, Sky } from '@/components/scenery'
 import { call, formatBytes, pickVariant, platformLabel, toastError, type Platform, type Quality, type ResolveResult } from '@/api'
 
 interface Row extends ResolveResult {
@@ -78,75 +79,84 @@ export function AddPanel({
 
   return (
     <>
-      <div className="sticky top-0 z-10 -mx-8 bg-background/90 px-8 pt-7 pb-6 backdrop-blur-md">
-        <PageTitle title={title} kanji={kanji} aside={subtitle} />
-        <div className="flex items-start gap-2 rounded-2xl border bg-card p-1.5 pl-3.5 shadow-xs transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ring/60 focus-within:ring-4 focus-within:ring-ring/15">
-          <LinkIcon className="mt-2 size-4 shrink-0 text-muted-foreground" aria-hidden />
-          <textarea
-            rows={1}
-            value={input}
-            readOnly={busy}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      <div className="sticky top-0 z-10 isolate">
+        <Sky className="h-full" />
+        <div className="mx-auto max-w-5xl px-8 pt-7 pb-6">
+          <PageTitle title={title} kanji={kanji} aside={subtitle} />
+          <div className="flex items-start gap-2 rounded-2xl border bg-card p-1.5 pl-3.5 shadow-xs transition-[border-color,box-shadow] duration-200 ease-out focus-within:border-ring/50 focus-within:ring-2 focus-within:ring-ring/10">
+            <LinkIcon className="mt-2 size-4 shrink-0 text-muted-foreground" aria-hidden />
+            <textarea
+              rows={1}
+              value={input}
+              readOnly={busy}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+                  e.preventDefault()
+                  void analyze(input)
+                }
+              }}
+              onPaste={(e) => {
+                if (input.trim()) return
                 e.preventDefault()
-                void analyze(input)
-              }
-            }}
-            onPaste={(e) => {
-              if (input.trim()) return
-              e.preventDefault()
-              void analyze(e.clipboardData.getData('text'))
-            }}
-            placeholder="Paste links or Abyss IDs"
-            aria-label="Video links"
-            spellCheck={false}
-            className="field-sizing-content max-h-40 min-h-8 flex-1 resize-none bg-transparent py-1.5 text-sm leading-5 outline-none placeholder:text-muted-foreground/80 read-only:opacity-60"
-          />
-          <Button onClick={() => analyze(input)} disabled={busy || !input.trim()}>
-            {busy && <Loader2Icon className="animate-spin" />}
-            {busy ? 'Analyzing' : 'Analyze'}
-          </Button>
+                void analyze(e.clipboardData.getData('text'))
+              }}
+              placeholder="Paste links or Abyss IDs"
+              aria-label="Video links"
+              spellCheck={false}
+              className="field-sizing-content max-h-40 min-h-8 flex-1 resize-none bg-transparent py-1.5 text-sm leading-5 outline-none placeholder:text-muted-foreground/80 read-only:opacity-60"
+            />
+            <Button onClick={() => analyze(input)} disabled={busy || !input.trim()} className={busy ? 'disabled:opacity-100' : undefined}>
+              {busy && <Pinwheel className="size-4" />}
+              {busy ? 'Analyzing' : 'Analyze'}
+            </Button>
+          </div>
+          <p className="mt-2 px-1 text-xs text-muted-foreground">
+            <Kbd>Enter</Kbd> analyze · <Kbd>Shift</Kbd>+<Kbd>Enter</Kbd> new line · <Kbd>Ctrl</Kbd>+<Kbd>V</Kbd> anywhere
+          </p>
         </div>
-        <p className="mt-2 px-1 text-xs text-muted-foreground">
-          <Kbd>Enter</Kbd> analyze · <Kbd>Shift</Kbd>+<Kbd>Enter</Kbd> new line · <Kbd>Ctrl</Kbd>+<Kbd>V</Kbd> anywhere
-        </p>
       </div>
 
-      {rows.length > 0 && (
-        <section className="mb-8 overflow-hidden rounded-2xl border bg-card shadow-xs" aria-label="Results">
-          <header className="flex items-center gap-3 border-b px-4 py-2.5">
-            <p className="text-sm font-medium">
-              {ready.length > 0 ? `${ready.length} ready` : `${rows.length} failed`}
-            </p>
-            {ready.length > 0 && rows.length > ready.length && (
-              <span className="text-xs text-destructive">{rows.length - ready.length} failed</span>
-            )}
-            <div className="ml-auto flex gap-1">
-              <Button variant="ghost" size="sm" onClick={() => setRows([])}>
-                Clear
-              </Button>
-              {ready.length > 1 && (
-                <Button size="sm" onClick={() => download(ready)}>
-                  <DownloadIcon /> Download all
-                </Button>
+      <div className="mx-auto max-w-5xl px-8">
+        {busy && (
+          <div className="mb-6 flex items-center gap-3 rounded-2xl border border-dashed px-4 py-2.5 text-sm text-muted-foreground transition-opacity duration-200 ease-out starting:opacity-0">
+            <AcornLoader className="h-9 w-6" />
+            Looking for videos…
+          </div>
+        )}
+        {rows.length > 0 && (
+          <section className="mb-8 overflow-hidden rounded-2xl border bg-card shadow-xs" aria-label="Results">
+            <header className="flex items-center gap-3 border-b px-4 py-2.5">
+              <p className="text-sm font-medium">{ready.length > 0 ? `${ready.length} ready` : `${rows.length} failed`}</p>
+              {ready.length > 0 && rows.length > ready.length && (
+                <span className="text-xs text-destructive">{rows.length - ready.length} failed</span>
               )}
-            </div>
-          </header>
-          <ul className="divide-y">
-            {rows.map((row, index) => (
-              <ResultRow
-                key={row.key}
-                row={row}
-                index={index}
-                onQuality={(quality) => setRows((prev) => prev.map((r) => (r.key === row.key ? { ...r, quality } : r)))}
-                onDownload={() => download([row])}
-                onDismiss={() => setRows((prev) => prev.filter((r) => r.key !== row.key))}
-              />
-            ))}
-          </ul>
-        </section>
-      )}
+              <div className="ml-auto flex gap-1">
+                <Button variant="ghost" size="sm" onClick={() => setRows([])}>
+                  Clear
+                </Button>
+                {ready.length > 1 && (
+                  <Button size="sm" onClick={() => download(ready)}>
+                    <DownloadIcon /> Download all
+                  </Button>
+                )}
+              </div>
+            </header>
+            <ul className="divide-y">
+              {rows.map((row, index) => (
+                <ResultRow
+                  key={row.key}
+                  row={row}
+                  index={index}
+                  onQuality={(quality) => setRows((prev) => prev.map((r) => (r.key === row.key ? { ...r, quality } : r)))}
+                  onDownload={() => download([row])}
+                  onDismiss={() => setRows((prev) => prev.filter((r) => r.key !== row.key))}
+                />
+              ))}
+            </ul>
+          </section>
+        )}
+      </div>
     </>
   )
 }
